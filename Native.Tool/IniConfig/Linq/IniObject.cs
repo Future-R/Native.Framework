@@ -337,8 +337,15 @@ namespace Native.Tool.IniConfig.Linq
 				throw new ArgumentException ("所指定的必须是文件 URI", "fileUri");
 			}
 
+			string path = fileUri.GetComponents (UriComponents.Path, UriFormat.Unescaped);
+
+			if (!File.Exists (path))
+			{
+				File.WriteAllText (path, string.Empty, encoding);
+			}
+
 			//解释 Ini 文件
-			using (TextReader textReader = new StreamReader (fileUri.GetComponents (UriComponents.Path, UriFormat.Unescaped), encoding))
+			using (TextReader textReader = new StreamReader (path, encoding))
 			{
 				IniObject iObj = ParseIni (textReader);
 				iObj.Path = fileUri;
