@@ -60,7 +60,7 @@ namespace Native.Tool.IniConfig.Linq
 		/// <summary>
 		/// 获取或设置用于保存 Ini 配置项的 <see cref="Uri"/> 实例
 		/// </summary>
-		public Uri Path { get; set; }
+		public Uri SaveUri { get; set; }
 
 		/// <summary>
 		/// 获取用于解析 Ini 配置项的 Regex 对象数组
@@ -248,11 +248,11 @@ namespace Native.Tool.IniConfig.Linq
 		/// </summary>
 		public void Save ()
 		{
-			if (this.Path == null)
+			if (this.SaveUri == null)
 			{
 				throw new UriFormatException (string.Format ("Uri: {0}, 是无效的 Uri 对象", "IniObject.Path"));
 			}
-			this.Save (this.Path);
+			this.Save (this.SaveUri);
 		}
 
 		/// <summary>
@@ -337,18 +337,26 @@ namespace Native.Tool.IniConfig.Linq
 				throw new ArgumentException ("所指定的必须是文件 URI", "fileUri");
 			}
 
-			string path = fileUri.GetComponents (UriComponents.Path, UriFormat.Unescaped);
+			string filePathString = fileUri.GetComponents (UriComponents.Path, UriFormat.Unescaped);
+			string directoryString = Path.GetDirectoryName (filePathString);
 
-			if (!File.Exists (path))
+			// 判断文件夹是否存在
+			if (!Directory.Exists(directoryString))
 			{
-				File.WriteAllText (path, string.Empty, encoding);
+				Directory.CreateDirectory (directoryString);
+			}
+
+			// 判断文件是否存在
+			if (!File.Exists (filePathString))
+			{
+				File.WriteAllText (filePathString, string.Empty, encoding);
 			}
 
 			//解释 Ini 文件
-			using (TextReader textReader = new StreamReader (path, encoding))
+			using (TextReader textReader = new StreamReader (filePathString, encoding))
 			{
 				IniObject iObj = ParseIni (textReader);
-				iObj.Path = fileUri;
+				iObj.SaveUri = fileUri;
 				return iObj;
 			}
 		}
