@@ -146,27 +146,6 @@ namespace Native.Tool.IniConfig
 		}
 
 		/// <summary>
-		/// 将 <see cref="IniObject"/> 实例中指定位置的 "节" 反序列化为指定类型的对象
-		/// </summary>
-		/// <param name="obj"><see cref="IniObject"/>, 用来查找 "节"</param>
-		/// <param name="index">节的位置</param>
-		/// <param name="type">对象的类型</param>
-		/// <exception cref="ArgumentNullException">参数: obj 或 type 是 null</exception>
-		/// <exception cref="ArgumentOutOfRangeException">index 小于 0。 - 或 - index 等于或大于 <see cref="IniObject.Count"/></exception>
-		/// <returns>反序列化成功返回指定类型的对象</returns>
-		public static object DeserializeObject (IniObject obj, int index, Type type)
-		{
-			try
-			{
-				return DeserializeObject (obj[index], type);
-			}
-			catch (ArgumentOutOfRangeException)
-			{
-				throw;
-			}
-		}
-
-		/// <summary>
 		/// 将 <see cref="IniObject"/> 实例中指定名称的 "节" 反序列化为指定类型的对象
 		/// </summary>
 		/// <param name="obj"><see cref="IniObject"/>, 用来查找 "节"</param>
@@ -202,27 +181,6 @@ namespace Native.Tool.IniConfig
 			}
 
 			return (T)DeserializeObject (obj, typeof (T));
-		}
-
-		/// <summary>
-		/// 将 <see cref="IniObject"/> 实例中指定位置的 "节" 反序列化为指定类型的对象
-		/// </summary>
-		/// <typeparam name="T">需要转换的类型</typeparam>
-		/// <param name="obj"><see cref="IniObject"/>, 用来查找 "节"</param>
-		/// <param name="index">节的位置</param>
-		/// <exception cref="ArgumentNullException">参数: obj 是 null</exception>
-		/// <exception cref="ArgumentOutOfRangeException">index 小于 0。 - 或 - index 等于或大于 <see cref="IniObject.Count"/></exception>
-		/// <returns>反序列化成功返回指定类型的对象</returns>
-		public static T DeserializeObject<T> (IniObject obj, int index)
-		{
-			try
-			{
-				return (T)DeserializeObject (obj, index, typeof (T));
-			}
-			catch (ArgumentOutOfRangeException)
-			{
-				throw;
-			}
 		}
 
 		/// <summary>
